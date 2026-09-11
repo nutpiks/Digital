@@ -1,0 +1,67 @@
+[
+  {
+    "institution_name":"Алтайский государственный институт культуры",
+    "center_name":"Алтайский государственный институт культуры",
+    "report_date":"08.09.2026",
+    "deadline":"не позднее 10 сентября",
+    "period":"Ежеквартальная",
+    "year":2026,
+    "center_type":"Центр прототипирования",
+    "institution_id":"agik",
+    "source_file":"АГИК.xlsx",
+    "rector":null,
+    "center_head":null
+  },
+  {
+    "institution_name":"Академия акварели и изящных искусств Сергея Андрияки",
+    "center_name":"Академия акварели и изящных искусств Сергея Андрияки",
+    "report_date":"10.09.2026",
+    "deadline":"10 сентября",
+    "period":"Ежеквартальная",
+    "year":2026,
+    "center_type":"Центр прототипирования",
+    "institution_id":"andriyaki",
+    "source_file":"Андрияки.xlsx",
+    "rector":null,
+    "center_head":null
+  },
+  {
+    "institution_name":"Федеральное государственное бюджетное образовательное учреждение высшего образования \"Воронежский государственный институт искусств\"",
+    "center_name":"Федеральное государственное бюджетное образовательное учреждение высшего образования \"Воронежский государственный институт искусств\"",
+    "report_date":"10.09.2026",
+    "deadline":"10 сентября",
+    "period":"Ежеквартальная",
+    "year":2026,
+    "center_type":"Центр прототипирования",
+    "institution_id":"vgii",
+    "source_file":"ВГИИ.xlsx",
+    "rector":null,
+    "center_head":null
+  },
+  {
+    "institution_name":"ФГБОУ ВО \"Государственный музыкально-педагогический институт",
+    "center_name":"ФГБОУ ВО \"Государственный музыкально-педагогический институт",
+    "report_date":"10.09.2026",
+    "deadline":"10 сентября",
+    "period":"Ежеквартальная",
+    "year":2026,
+    "center_type":"Центр прототипирования",
+    "institution_id":"gmp",
+    "source_file":"гмп.xlsx",
+    "rector":null,
+    "center_head":null
+  },
+  {
+    "institution_name":"образовательное учреждение «ПЕРМСКОЕ ГОСУДАРСТВЕННОЕ ХОРЕОГРАФИЧЕСКОЕ УЧИЛИЩЕ»",
+    "center_name":null,
+    "report_date":"10.09.2026",
+    "deadline":"10 сентября",
+    "period":"Ежеквартальная",
+    "year":2026,
+    "center_type":"Творческий инкубатор",
+    "institution_id":"teatrium",
+    "source_file":"театриум.xlsx",
+    "rector":null,
+    "center_head":null
+  }
+]
