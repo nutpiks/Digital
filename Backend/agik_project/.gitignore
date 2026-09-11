@@ -8,4 +8,11 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+
+# сырьё
+data/raw/
+!data/raw/.gitkeep
+
+# временные файлы Excel
 ~$*.xlsx
