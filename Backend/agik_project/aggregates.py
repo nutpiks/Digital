@@ -67,6 +67,7 @@ def main():
 
     # ========== 4. Кластеризация (k-means, 2 кластера) ==========
     # берём 3 ключевых показателя по учреждениям
+        # ========== 4. Кластеризация (k-means) ==========
     pivot_rows = []
     for inst_id, group in df2.groupby("institution_id"):
         row = {"institution_id": inst_id}
@@ -79,19 +80,33 @@ def main():
 
     piv = pd.DataFrame(pivot_rows).fillna(0)
 
-    # простая нормализация (z-стандартизация по колонкам)
+    # защита: если учреждений < 2 — кластеры не строим
+    if len(piv) < 2:
+        print(f" учреждений: {len(piv)}, кластеры не строятся (нужно ≥ 2)")
+        piv["cluster"] = 0
+        piv["cluster_label"] = "cluster_A"
+        piv.to_parquet(CLEAN / "clusters.parquet", index=False)
+        piv.to_csv(CLEAN / "clusters.csv", index=False, encoding="utf-8-sig")
+        print(f"OK aggregates: {len(df2)} строк")
+        print(piv.to_string(index=False))
+        return
+
+    # стандартизация + k-means
     X = piv[["residents", "products", "services_rub"]].values
     X_std = (X - X.mean(axis=0)) / (X.std(axis=0) + 1e-9)
 
-    # k-means вручную, k=2 (чтобы не тащить sklearn)
+    # число кластеров не больше, чем точек
+    k = min(2, len(X_std))
+
     np.random.seed(42)
-    k = 2
     centers = X_std[np.random.choice(len(X_std), k, replace=False)]
     for _ in range(50):
         dists = np.linalg.norm(X_std[:, None, :] - centers[None, :, :], axis=2)
         labels = dists.argmin(axis=1)
-        new_centers = np.array([X_std[labels == i].mean(axis=0) if (labels == i).any()
-                                 else centers[i] for i in range(k)])
+        new_centers = np.array([
+            X_std[labels == i].mean(axis=0) if (labels == i).any() else centers[i]
+            for i in range(k)
+        ])
         if np.allclose(new_centers, centers):
             break
         centers = new_centers
@@ -102,7 +117,6 @@ def main():
     piv.to_parquet(CLEAN / "clusters.parquet", index=False)
     piv.to_csv(CLEAN / "clusters.csv", index=False, encoding="utf-8-sig")
 
-    # ========== 5. Итоговый отчёт в терминал ==========
     print(f"OK aggregates: {len(df2)} строк")
     print(f"OK clusters:   {len(piv)} учреждений\n")
     print(piv.to_string(index=False))

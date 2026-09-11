@@ -1,7 +1,7 @@
 """
-Универсальный парсер отчётов ЦП/ТИ (формат АГИК/ТЕАТРИУМ/ВГИИ/Андрияки).
+Универсальный парсер отчётов ЦП/ТИ (формат АГИК/ТЕАТРИУМ/ВГИИ/Андрияки/гмп).
 
-Вход:  data/raw/*.xlsx  (4 файла одного формата)
+Вход:  data/raw/*.xlsx  (5 файлов одного формата)
 Выход: data/clean/institutions.parquet   — справочник организаций
        data/clean/institutions.csv
        data/clean/indicators.parquet     — все показатели всех организаций
@@ -23,6 +23,7 @@ FILE_TO_ID = {
     "театриум": "teatrium",
     "ВГИИ":     "vgii",
     "Андрияки": "andriyaki",
+    "гмп":"gmp"
 }
 
 
@@ -116,16 +117,23 @@ def extract_signatures(df):
 
 def parse_form1(df, inst_id):
     rows = []
-    for _, r in df.iterrows():
+    for i, r in df.iterrows():
         name = str(r.get("B", "")).strip()
         if not name:
             continue
         if "Темп роста" not in name and "Увеличение числа" not in name:
             continue
+
         clean_name, unit = split_unit(name)
+
         plan = to_num(r.get("C"))
         pct = to_num(r.get("D"))
-        fact = to_num(r.get("E"))
+
+        raw_fact = r.get("E")
+        fact = to_num(raw_fact)
+        if fact is None and str(raw_fact).strip().startswith("="):
+            fact = _resolve_formula(raw_fact, df, col_letter="E")
+
         rows.append({
             "institution_id": inst_id,
             "form": "form1",
@@ -176,6 +184,57 @@ def parse_appendix_f1(df, inst_id):
     return rows
 
 
+def _resolve_formula(cell_value, df, col_letter="C", visited=None):
+    """
+    Пытается вычислить простую Excel-формулу вида:
+        =C13+C14+C15
+        =C23+C24
+    Внутри одного листа. Возвращает float или None.
+    Циклы отслеживаются через visited.
+    """
+    if visited is None:
+        visited = set()
+
+    s = str(cell_value).strip()
+    if not s.startswith("="):
+        return None
+
+    expr = s[1:].strip()                    # убираем "="
+    # оставляем только ссылки на ячейки и знаки + - * /
+    import re as _re
+    tokens = _re.findall(r"[A-Z]+\d+|[+\-*/()]|\d+\.?\d*", expr)
+    if not tokens:
+        return None
+
+    result_expr = ""
+    for tok in tokens:
+        m = _re.fullmatch(r"([A-Z]+)(\d+)", tok)
+        if m:
+            col, row = m.group(1), int(m.group(2))
+            # Excel хранит строки с 1, pandas — с 0
+            idx = row - 1
+            if idx in visited:
+                return None
+            visited.add(idx)
+            if idx < 0 or idx >= len(df):
+                return None
+            raw = df.iloc[idx].get(col)
+            num = to_num(raw)
+            if num is None:
+                # возможно это тоже формула — пробуем развернуть
+                num = _resolve_formula(raw, df, col, visited)
+                if num is None:
+                    num = 0.0
+            result_expr += str(num)
+        else:
+            result_expr += tok
+
+    try:
+        return float(eval(result_expr, {"__builtins__": {}}, {}))
+    except Exception:
+        return None
+
+
 def parse_form2(df, inst_id):
     rows = []
     for _, r in df.iterrows():
@@ -183,7 +242,7 @@ def parse_form2(df, inst_id):
         code = "" if pd.isna(raw_a) else str(raw_a).strip()
         name = str(r.get("B", "")).strip()
 
-        # если в A пусто — смотрим, не начинается ли name с "3.1. ..." и т.д.
+        # подпункты 3.1, 4.2 — код внутри name
         if not code:
             m = re.match(r"^(\d+\.\d+)\.\s*(.+)$", name)
             if m:
@@ -194,7 +253,13 @@ def parse_form2(df, inst_id):
             continue
 
         clean_name, unit = split_unit(name)
-        fact = to_num(r.get("C"))
+
+        # достаём значение из C: сначала как число, потом как формулу
+        raw_c = r.get("C")
+        fact = to_num(raw_c)
+        if fact is None and str(raw_c).strip().startswith("="):
+            fact = _resolve_formula(raw_c, df, col_letter="C")
+
         rows.append({
             "institution_id": inst_id,
             "form": "form2",
@@ -212,6 +277,9 @@ def parse_form2(df, inst_id):
             "evidence": str(r.get("E", "")).strip() or None,
         })
     return rows
+
+
+    
 
 # ================= MAIN =================
 

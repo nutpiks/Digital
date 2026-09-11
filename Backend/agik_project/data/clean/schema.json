@@ -1,35 +1,35 @@
 {
   "institutions": {
-    "institution_name": "object",
-    "center_name": "object",
-    "report_date": "object",
-    "deadline": "object",
-    "period": "object",
+    "institution_name": "str",
+    "center_name": "str",
+    "report_date": "str",
+    "deadline": "str",
+    "period": "str",
     "year": "int64",
-    "center_type": "object",
-    "institution_id": "object",
-    "source_file": "object",
+    "center_type": "str",
+    "institution_id": "str",
+    "source_file": "str",
     "rector": "object",
     "center_head": "object"
   },
   "indicators": {
-    "institution_id": "object",
-    "form": "object",
-    "code": "object",
-    "parent_code": "object",
+    "institution_id": "str",
+    "form": "str",
+    "code": "str",
+    "parent_code": "str",
     "level": "int64",
-    "name": "object",
-    "unit": "object",
+    "name": "str",
+    "unit": "str",
     "plan_2025": "float64",
     "fact_2026": "float64",
     "plan_percent": "float64",
     "deviation": "float64",
     "deviation_pct": "float64",
-    "formula": "object",
-    "evidence": "object"
+    "formula": "str",
+    "evidence": "str"
   },
   "rows": {
-    "institutions": 4,
-    "indicators": 104
+    "institutions": 5,
+    "indicators": 130
   }
 }
