@@ -1,0 +1,5 @@
+﻿institution_id,residents,products,services_rub,cluster,cluster_label
+agik,356.0,115.0,1224900.0,1,cluster_B
+andriyaki,21.0,21.0,149600.0,0,cluster_A
+teatrium,0.0,0.0,0.0,0,cluster_A
+vgii,160.0,35.0,3550500.0,1,cluster_B
