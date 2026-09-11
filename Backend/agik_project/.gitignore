@@ -11,8 +11,9 @@ Thumbs.db
 
 
 # сырьё
-data/raw/
+data/raw/*
 !data/raw/.gitkeep
+!data/raw/README.md
 
 # временные файлы Excel
 ~$*.xlsx
