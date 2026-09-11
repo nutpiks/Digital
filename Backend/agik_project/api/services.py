@@ -37,13 +37,19 @@ def compute_kpi(df: pd.DataFrame) -> dict:
     services = _val("form2", "6")
     residents = _val("form2", "3")
     products = _val("form2", "4")
-    avg_z = float(df["z_score"].mean()) if not df["z_score"].isna().all() else 0.0
+    avg_dev = (
+        float(df["deviation_from_mean_pct"].abs().mean())
+        if not df["deviation_from_mean_pct"].isna().all()
+        else 0.0
+    )
+    lagging = int((df["z_score"] < -0.5).sum())
 
     return {
         "services_rub": services,
         "residents": int(residents),
         "products": int(products),
-        "avg_z_score": round(avg_z, 3),
+        "avg_deviation_pct": round(avg_dev, 2),
+        "lagging_count": lagging,
     }
 
 
