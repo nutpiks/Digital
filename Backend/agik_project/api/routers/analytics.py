@@ -14,10 +14,11 @@ router = APIRouter()
 @router.get("/overview")
 def overview(institution_ids: Optional[list[str]] = Query(None)):
     """4 KPI-карточки (задача 3.5)."""
+    from services import clean_records
     df = filter_indicators(DataStore.agg(), institution_ids=institution_ids)
     return {
-        "kpi": compute_kpi(df),
-        "plan_vs_fact": plan_vs_fact(df),
+        "kpi": clean_records([compute_kpi(df)])[0],
+        "plan_vs_fact": clean_records([plan_vs_fact(df)])[0],
         "records": len(df),
     }
 
@@ -32,8 +33,8 @@ def dynamics(institution_ids: Optional[list[str]] = Query(None)):
             "institution_id": iid,
             **plan_vs_fact(group),
         })
-    return result
-
+    from services import clean_records
+    return clean_records(result)
 
 @router.get("/top")
 def top(n: int = 10, by: str = "fact_2026",

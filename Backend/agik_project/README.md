@@ -38,7 +38,8 @@ validate.py                    ← проверка целостности
 ```bash
 # 1. Создать venv (один раз)
 py -m venv venv
-.\venv\Scripts\Activate.ps1
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\.venv\Scripts\Activate.ps1
 
 # 2. Поставить зависимости (один раз)
 pip install -r requirements.txt
@@ -50,7 +51,7 @@ pip install pandas openpyxl pyarrow
 
 # 4. Собрать чистые данные (порядок обязателен)
 py parse_reports.py     # xlsx → indicators + institutions
-py aggregates.py        # + среднее, z-score, кластеры
+py aggregates.py       # + среднее, z-score, кластеры
 py validate.py          # проверка, пишет validation_report.json
 ```
 (выйти из режима venv:

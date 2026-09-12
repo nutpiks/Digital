@@ -1,6 +1,7 @@
 """Системные роуты: /health, /meta, /institutions, /clusters."""
 from fastapi import APIRouter
 from data_store import DataStore
+from services import clean_records
 
 router = APIRouter()
 
@@ -32,11 +33,11 @@ def institutions():
     cols = ["institution_id", "institution_name", "center_name",
             "center_type", "report_date", "period", "year", "rector", "center_head"]
     existing = [c for c in cols if c in inst.columns]
-    return inst[existing].to_dict(orient="records")
+    return clean_records(inst[existing].to_dict(orient="records"))
 
 
 @router.get("/clusters")
 def clusters():
     """Кластеры учреждений (k-means)."""
     df = DataStore.clusters()
-    return df.to_dict(orient="records")
+    return clean_records(df.to_dict(orient="records"))

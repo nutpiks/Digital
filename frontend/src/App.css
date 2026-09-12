@@ -409,3 +409,95 @@
   color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
 }
+
+.r5-header {
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.r5-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-4);
+}
+
+.r5-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.r5-btn-reset {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.r5-btn-reset:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.r5-filters {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  flex-wrap: wrap;
+}
+
+.r5-filters-label {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.r5-filters-chips {
+  display: flex;
+  gap: var(--spacing-2);
+  flex-wrap: wrap;
+}
+
+.r5-chip {
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-input);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.r5-chip:hover {
+  border-color: var(--color-primary);
+}
+
+.r5-chip.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* Загрузка / ошибка */
+.r5-loading,
+.r5-error {
+  padding: var(--spacing-8);
+  text-align: center;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  margin: var(--spacing-4) 0;
+}
+
+.r5-error {
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+}

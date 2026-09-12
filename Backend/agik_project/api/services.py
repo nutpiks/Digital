@@ -2,8 +2,33 @@
 Математика: фильтрация и агрегации над aggregates.parquet.
 Задачи 3.2, 3.3, 3.4, 3.5, 3.7, 3.8, 3.9, 3.10 + бонус.
 """
-import pandas as pd
 import numpy as np
+import pandas as pd
+import math 
+
+def _clean_value(v):
+    """NaN/Infinity → None, numpy-типы → python-типы."""
+    if v is None:
+        return None
+    if isinstance(v, float):
+        if math.isnan(v) or math.isinf(v):
+            return None
+        return v
+    if isinstance(v, (np.integer,)):
+        return int(v)
+    if isinstance(v, (np.floating,)):
+        f = float(v)
+        if math.isnan(f) or math.isinf(f):
+            return None
+        return f
+    if isinstance(v, (np.bool_,)):
+        return bool(v)
+    return v
+
+
+def clean_records(records):
+    """Список словарей → все значения чистые."""
+    return [{k: _clean_value(v) for k, v in row.items()} for row in records]
 
 
 def filter_indicators(
@@ -74,7 +99,7 @@ def top_indicators(df: pd.DataFrame, n: int = 10, by: str = "fact_2026") -> list
     """Топ-N показателей (задача 3.7)."""
     sub = df.dropna(subset=[by]).nlargest(n, by)
     cols = ["institution_id", "form", "code", "name", "unit", by]
-    return sub[cols].round(3).to_dict(orient="records")
+    return clean_records(sub[cols].round(3).to_dict(orient="records"))
 
 
 def breakdown(df: pd.DataFrame, by: str = "form") -> list[dict]:
@@ -85,8 +110,7 @@ def breakdown(df: pd.DataFrame, by: str = "form") -> list[dict]:
           .reset_index()
           .sort_values("fact_2026", ascending=False)
     )
-    return grouped.round(2).to_dict(orient="records")
-
+    return clean_records(grouped.round(2).to_dict(orient="records"))
 
 def heatmap_matrix(df: pd.DataFrame, metric: str = "z_score") -> dict:
     """Матрица учреждения × показатели (задача 3.9)."""
@@ -133,7 +157,7 @@ def table_view(
         "total": total,
         "limit": limit,
         "offset": offset,
-        "items": page[cols].round(3).to_dict(orient="records"),
+        "items": clean_records(page[cols].round(3).to_dict(orient="records")),
     }
 
 
@@ -143,4 +167,4 @@ def recommendations(df: pd.DataFrame, z_threshold: float = -0.5) -> list[dict]:
     sub["advice"] = "Ниже среднего по группе — стоит подтянуть"
     cols = ["institution_id", "form", "code", "name",
             "fact_2026", "group_mean", "z_score", "advice"]
-    return sub[cols].round(3).head(20).to_dict(orient="records")
+    return clean_records(sub[cols].round(3).head(20).to_dict(orient="records"))
