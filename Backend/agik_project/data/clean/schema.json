@@ -1,0 +1,35 @@
+{
+  "institutions": {
+    "institution_name": "str",
+    "center_name": "str",
+    "report_date": "str",
+    "deadline": "str",
+    "period": "str",
+    "year": "int64",
+    "center_type": "str",
+    "institution_id": "str",
+    "source_file": "str",
+    "rector": "object",
+    "center_head": "object"
+  },
+  "indicators": {
+    "institution_id": "str",
+    "form": "str",
+    "code": "str",
+    "parent_code": "str",
+    "level": "int64",
+    "name": "str",
+    "unit": "str",
+    "plan_2025": "float64",
+    "fact_2026": "float64",
+    "plan_percent": "float64",
+    "deviation": "float64",
+    "deviation_pct": "float64",
+    "formula": "str",
+    "evidence": "str"
+  },
+  "rows": {
+    "institutions": 5,
+    "indicators": 130
+  }
+}

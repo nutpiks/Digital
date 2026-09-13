@@ -1,0 +1,19 @@
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+.vs/
+.idea/
+.DS_Store
+Thumbs.db
+
+
+# сырьё
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/README.md
+
+# временные файлы Excel
+~$*.xlsx
